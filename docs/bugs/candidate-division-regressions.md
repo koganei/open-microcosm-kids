@@ -51,6 +51,18 @@ respectively fail at `test_candidates.cpp:57` or `:64`. The ongoing workstation
 run is logged at `/tmp/microcosm-kids-all-tests.log`. This file records observed
 failures rather than relying on an unavailable CI badge.
 
+A focused Gonium test also fails two boundary checks under ASan/UBSan without
+a sanitizer diagnostic (`/tmp/microcosm-gonium-asan.log`). A trace linked with
+the full test objects finds crossing boundaries after daughter release, persisting
+at step 31. A minimal candidate-only binary passes the half-second boundary
+check, despite transient earlier crossings; the geometry is sensitive to build
+context. This difference is evidence to investigate, not a reason to discard
+the complete-suite failure. No biological parameters were changed.
+
+For Ceratium, a seeded trace reaches progress 5.9991 at 180 simulated seconds,
+with one cell and two crossed boundary pairs. The measured furrow half-width
+stalls near 1.08 micrometres. Progress alone does not imply valid separation.
+
 ## Cause
 
 Unknown. Complex boundaries, rest-shape reconstruction and closure constraints

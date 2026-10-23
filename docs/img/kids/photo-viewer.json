@@ -5,10 +5,10 @@
   "open_photo": 0,
   "notebook": 1,
   "paused": 1,
-  "diagram": 1,
+  "diagram": 0,
   "follow": 1,
   "photos": 1,
-  "selected": 0,
+  "selected": 2,
   "food_offers": 0,
   "meals": 0,
   "chapter": 0,
@@ -17,9 +17,9 @@
   "salty": 0,
   "changed": 0,
   "volume": 1,
-  "elapsed": 0.95,
-  "frame_ms": 16.9399,
-  "tick_ms": 5.1e-05,
-  "render_ms": 2.2e-05,
-  "narration": "Tiny hair-like parts called cilia beat to help this single cell swim and sweep in food."
+  "elapsed": 0.933333,
+  "frame_ms": 16.6667,
+  "tick_ms": 3.9e-05,
+  "render_ms": 2.1e-05,
+  "narration": "A thread called a flagellum helps Euglena swim. Green parts use light to make food."
 }

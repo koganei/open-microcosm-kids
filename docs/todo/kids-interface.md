@@ -30,3 +30,11 @@ sizes have been checked. The shared inspector/export notch bounds errors were
 reproduced and fixed; the inspector and kids controller pass sanitizer runs.
 The complete upstream CTest run is still in progress. Do not mark verification
 complete until its terminal result and the packaged-app smoke review are saved.
+
+The separate user-local installation and smoke review have passed and were
+published in commit `70dec1f`. Further native reviews added spoken choice guides,
+corrected thumbnail proportions and the onion introduction, and improved initial
+Safari framing. The full suite is still active; six candidate-division failures
+are recorded in `docs/bugs/candidate-division-regressions.md`, with focused
+geometry/sanitizer evidence. Do not replace this unresolved gate with the passing
+focused kids tests.

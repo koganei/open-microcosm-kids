@@ -36,6 +36,22 @@ without scrolling or clipped controls. The read-aloud controls stay in place whe
 explanations change. Story progression keeps its button position between chapters.
 Keyboard focus is visible; Tab, Enter, Space, +/- and Escape have been exercised.
 
+An additional review found that early readers needed help before entering an
+activity. Home, habitat selection and organism selection now offer “Hear
+choices” and Stop. The guide was exercised through native clicks and a local
+Speech Dispatcher playback stream. A screenshot exposed overlap with the
+speech-status banner; moving the controls below it resolved that overlap.
+
+Organism thumbnails originally stretched a wide viewport into a narrower box,
+and Euglena was too small to recognise. Previews now preserve proportions and
+frame each organism with its own camera zoom. The picker states that sizes
+differ. Live Safari initially fits its organism too. The Wonder Lab introduction
+now renders its own onion preparation instead of reusing the Amoeba preview.
+Saved photos use proportional fitting to retain the full picture and scale bar.
+The corrected [organism picker](../img/kids/safari-choices.png),
+[Euglena framing](../img/kids/safari-euglena.png) and
+[onion introduction](../img/kids/lab-chooser.png) are native captures of this pass.
+
 Photo viewing was added after reviewing the notebook at full size. Scale labels
 now use the app font, while seed and timing remain in the provenance sidecar.
 Only the visible notebook page loads image textures. Empty/end pagination is disabled.
@@ -83,6 +99,13 @@ six failures in complex candidate division tests; see
 No tests have been skipped or marked expected failure to hide those results.
 The neutrophil approach test was changed separately to state individual and
 ensemble stochastic expectations; no biological parameters were tuned.
+
+A focused Gonium run reproduced two boundary failures under ASan/UBSan without
+a sanitizer diagnostic. A geometry trace finds transient crossings shortly
+after daughter release. A separate Ceratium trace remains in division at 180
+simulation seconds, with progress approximately 6 and a stalled furrow. These
+observations narrow the investigation; they do not establish a fix or validate
+those mechanisms.
 
 ## Remaining acceptance work
 

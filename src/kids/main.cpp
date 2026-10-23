@@ -183,6 +183,7 @@ class Application {
     std::unique_ptr<Renderer> renderer;
     RenderTexture2D canvas{}, view{}, before{};
     std::array<Texture2D, 4> previews{};
+    Texture2D labPreview{};
     Camera2D camera{};
     std::vector<Photo> photos;
     std::filesystem::path data;
@@ -205,7 +206,8 @@ class Application {
     void start(int selected);
     void renderView();
     void drawAnatomy();
-    void drawTexture(Texture2D t, Rectangle target, Color tint = WHITE);
+    void drawTexture(Texture2D t, Rectangle target, Color tint = WHITE, bool crop = false);
+    float creatureZoom() const;
     void say(const std::string &s);
     void stopSpeech();
     void note(const std::string &s) {
@@ -218,10 +220,44 @@ class Application {
     std::string narration() const;
 };
 
-void Application::drawTexture(Texture2D t, Rectangle r, Color tint) {
-    if (t.id)
-        DrawTexturePro(t, {0, 0, static_cast<float>(t.width), static_cast<float>(t.height)}, r,
-                       {0, 0}, 0, tint);
+void Application::drawTexture(Texture2D t, Rectangle r, Color tint, bool crop) {
+    if (!t.id)
+        return;
+    Rectangle source{0, 0, static_cast<float>(t.width), static_cast<float>(t.height)};
+    const float scale = crop ? std::max(r.width / source.width, r.height / source.height)
+                             : std::min(r.width / source.width, r.height / source.height);
+    if (crop) {
+        source.width = r.width / scale;
+        source.height = r.height / scale;
+        source.x = (static_cast<float>(t.width) - source.width) / 2;
+        source.y = (static_cast<float>(t.height) - source.height) / 2;
+    } else {
+        const float width = source.width * scale, height = source.height * scale;
+        r = {r.x + (r.width - width) / 2, r.y + (r.height - height) / 2, width, height};
+    }
+    DrawTexturePro(t, source, r, {0, 0}, 0, tint);
+}
+
+float Application::creatureZoom() const {
+    if (!session.world || session.selected.kind != Picked::Kind::Cell)
+        return 2.0f;
+    const auto *body = session.world->registry().try_get<RingBody>(session.selected.entity);
+    if (!body)
+        return 2.0f;
+    const Vec2 size = body->aabbMax - body->aabbMin;
+    const float extent = std::max(size.x, size.y);
+    float zoom = 300.0f / std::max(1.0f, extent);
+    // El hilo de Euglena necesita margen al girar. Usa el mismo largo que el render.
+    if (session.selectedCreature() == 2) {
+        float halfLength = 0;
+        for (const Vec2 &point : body->restRing)
+            halfLength = std::max(halfLength, std::abs(point.x));
+        const auto &info =
+            speciesInfo(session.world->registry().get<Species>(session.selected.entity).id);
+        const float flagellum = info.flagellumLength > 0 ? info.flagellumLength : 2.2f * halfLength;
+        zoom = std::min(zoom, 220.0f / std::max(1.0f, halfLength + flagellum + 4.0f));
+    }
+    return std::clamp(zoom, .25f, 10.0f);
 }
 
 void Application::stopSpeech() {
@@ -241,6 +277,7 @@ void Application::start(int selected) {
         return;
     }
     try {
+        stopSpeech();
         session.start(static_cast<kids::Experience>(route), selected);
         activity = true;
         baselineRequested = false;
@@ -255,7 +292,7 @@ void Application::start(int selected) {
         camera.zoom = route == 3 ? 2.1f : 1.05f;
         camera.offset = {viewRect.width / 2, viewRect.height / 2};
         if (route == 2 || route == 4)
-            camera.zoom = 2.0f;
+            camera.zoom = creatureZoom();
         renderView();
         BeginTextureMode(before);
         DrawTextureRec(view.texture,
@@ -309,6 +346,12 @@ void Application::home() {
     ui.text("SMALL WORLD, BIG DISCOVERIES", 255, 44, 16, green);
     ui.text("What will you discover today?", 252, 77, 42);
     ui.text("Look closer. Try something. Follow your curiosity.", 255, 137, 23, muted);
+    if (ui.button("Hear choices", {1040, 118, 220, 48}))
+        say("Choose your adventure. Pocket Pond: explore a habitat. Tiny Detectives: solve a "
+            "little mystery. Micro Safari: meet a living thing. Wonder Lab: try an experiment. "
+            "A Drop of Adventure: follow a story. Your saved photos are in My notebook.");
+    if (ui.button("Stop", {1275, 118, 127, 48}))
+        stopSpeech();
     const Rectangle hero{254, 195, 1148, 262};
     habitatArt(hero, 0);
     ui.box({276, 218, 493, 216}, paper);
@@ -330,6 +373,7 @@ void Application::home() {
         ui.text(names[static_cast<std::size_t>(i)], x + 79, y + 24, 27);
         ui.text(verbs[static_cast<std::size_t>(i)], x + 79, y + 67, 21, muted);
         if (ui.button("Go", {x + 453, y + 70, 85, 44})) {
+            stopSpeech();
             route = i;
             choice = 0;
             activity = false;
@@ -342,6 +386,22 @@ void Application::chooser() {
     ui.text("CHOOSE YOUR ADVENTURE", 255, 43, 16, green);
     ui.text(names[static_cast<std::size_t>(route)], 252, 79, 46);
     ui.text(subtitles[static_cast<std::size_t>(route)], 255, 143, 24, muted);
+    if (route == 0 || route == 2) {
+        if (ui.button("Hear choices", {1040, 118, 220, 48})) {
+            if (route == 0)
+                say("Choose a habitat. Pond: still water, lots to discover. Puddle: a little "
+                    "world after the rain. Moss: a wet home among tiny leaves. These are small, "
+                    "prepared samples of life from each habitat.");
+            else {
+                std::string choices = "Choose a tiny living thing to meet. ";
+                for (const auto &creature : kids::creatures())
+                    choices += std::string(creature.name) + ": " + creature.title + ". ";
+                say(choices + "The previews are shown at different sizes.");
+            }
+        }
+        if (ui.button("Stop", {1275, 118, 127, 48}))
+            stopSpeech();
+    }
     if (route == 0) {
         const char *labels[] = {"Pond", "Puddle", "Moss"};
         const char *desc[] = {"Still water. Lots to discover.", "A little world after the rain.",
@@ -360,14 +420,15 @@ void Application::chooser() {
             const float x = 254 + static_cast<float>(i % 2) * 586,
                         y = 212 + static_cast<float>(i / 2) * 285;
             ui.box({x, y, 562, 258}, white);
-            drawTexture(previews[static_cast<std::size_t>(i)], {x + 16, y + 18, 218, 173});
+            drawTexture(previews[static_cast<std::size_t>(i)], {x + 16, y + 18, 218, 173}, WHITE,
+                        true);
             const auto &c = kids::creatures()[static_cast<std::size_t>(i)];
             ui.text(c.name, x + 254, y + 28, 28);
             ui.wrap(c.title, x + 254, y + 76, 275, 23);
             if (ui.button(std::string("Meet ") + c.name, {x + 254, y + 170, 280, 58}, true))
                 start(i);
         }
-        ui.text("These are simulated living things, not photographs.", 255, 824, 19, muted);
+        ui.text("Preview sizes differ. Meet one to see its scale.", 255, 824, 19, muted);
     } else {
         const char *heading = route == 1   ? "Who swims with tiny hairs?"
                               : route == 3 ? "What if we add salt?"
@@ -382,7 +443,7 @@ void Application::chooser() {
         if (route == 4)
             habitatArt({278, 242, 500, 466}, 0);
         else
-            drawTexture(previews[route == 3 ? 1 : 0], {278, 242, 500, 466});
+            drawTexture(route == 3 ? labPreview : previews[0], {278, 242, 500, 466}, WHITE, true);
         ui.text(route == 1   ? "CASE 01"
                 : route == 3 ? "TRY IT AND SEE"
                              : "LISTEN AND LOOK",
@@ -953,7 +1014,7 @@ int Application::run(int argc, char **argv) {
     for (int i = 0; i < 4; ++i) {
         session.start(kids::Experience::Safari, i);
         camera = {};
-        camera.zoom = i == 3 ? .65f : 1.4f;
+        camera.zoom = creatureZoom();
         camera.offset = {402, 247};
         Vec2 pos;
         if (session.selectedPosition(pos))
@@ -966,6 +1027,16 @@ int Application::run(int argc, char **argv) {
         previews[static_cast<std::size_t>(i)] = LoadTextureFromImage(image);
         UnloadImage(image);
     }
+    session.start(kids::Experience::Lab);
+    camera = {};
+    camera.zoom = 2.1f;
+    camera.offset = {402, 247};
+    camera.target = {session.world->width() / 2, session.world->height() / 2};
+    renderView();
+    Image labImage = LoadImageFromTexture(view.texture);
+    ImageFlipVertical(&labImage);
+    labPreview = LoadTextureFromImage(labImage);
+    UnloadImage(labImage);
     int screenshotFrames = 0;
     std::string screenshot;
     for (int i = 1; i < argc; ++i) {
@@ -1091,6 +1162,8 @@ int Application::run(int argc, char **argv) {
     for (auto t : previews)
         if (t.id)
             UnloadTexture(t);
+    if (labPreview.id)
+        UnloadTexture(labPreview);
     for (auto t : habitatTextures)
         if (t.id)
             UnloadTexture(t);

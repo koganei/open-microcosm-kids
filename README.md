@@ -25,6 +25,7 @@ is not green. See the [review evidence and remaining work](docs/design/kids-revi
 All five share pause, zoom, a labelled diagram view, optional local read-aloud,
 and a photo notebook with full-size viewing, saved on your own computer. There are no accounts,
 advertisements, points or cloud speech requests.
+The home screen and habitat/organism pickers can read their choices aloud too.
 
 This is a computer model, not a view through a physical microscope. Habitat
 samples are curated, and some processes use accelerated biological time.

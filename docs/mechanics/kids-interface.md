@@ -101,3 +101,16 @@ honours `XDG_DATA_HOME`; the default remains `~/.local/share/open-microcosm-kids
 Kids photos use the app font for a clear scale bar. Run time and seed remain in
 its JSON sidecar rather than being stamped across the child's picture. The
 original laboratory retains its existing stamped-photo defaults.
+
+Home, habitat selection and organism selection provide a local “Hear choices”
+guide before a child enters an activity. Starting an activity or changing pages
+stops the previous guide. The guide controls sit below the transient status
+banner so both remain readable while speech is playing.
+
+Picker previews preserve the renderer's proportions: they are cropped to fill
+their thumbnail, never stretched. Their camera zoom fits the chosen organism,
+and a visible note explains that preview sizes differ. Live Safari also frames
+the selected organism initially; the live scale bar remains authoritative.
+The Wonder Lab introduction is rendered from its actual onion preparation,
+separately from the four organism previews. Notebook photos preserve the entire
+image with proportional fitting rather than cropping away their scale bar.
