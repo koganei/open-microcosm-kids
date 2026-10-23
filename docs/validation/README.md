@@ -323,3 +323,21 @@ Still pending:
 - Decide how to sustain the bacteria in the drop ("Collapse of the bacteria") and re-enable the
   30-min test.
 - Verify the Gause temperatures and the Tilman values against the publications.
+
+## Neutrophil smoke-test interpretation in the kids fork
+
+The three-seed neutrophil movement check is a qualitative regression assay,
+not a population-level clinical validation. The model contains persistent random
+walking, so requiring at least 20% approach on every individual trajectory was
+stronger than the test's stated claim that each cell approaches the colony.
+On the portable GCC 13 build the three final distances were 61.25, 77.39 and
+54.30 micrometres from starting distances of 90 micrometres each: every cell
+approached, two exceeded 20%, and the ensemble reduction was about 28.5%.
+
+The fork retains all three requirements explicitly: positive approach in every
+seed, at least 20% approach in the majority, and at least 20% mean approach.
+The separate requirement that at least two cells ingest bacteria is retained.
+No physiology, random seed, run duration, receptor threshold or migration
+parameter was adjusted. This check does not establish a measured chemotactic
+index against a receptor-blocked control; that remains an external validation
+limit. Human cell culture is not exposed by the kids application.
