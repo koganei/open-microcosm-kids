@@ -226,10 +226,11 @@ void writeSpecies(Json& j, SpeciesId id) {
     j.boolean("filamento", s.filament);
     j.number("colonias_hijas", s.colonyDaughters);
     j.number("celulas_colonia", s.colonyCells);
-    // Prolongaciones rígidas (cuernos, espinas, brazos) para el tamaño típico.
+    // Procesos del contorno: prolongaciones y hendiduras para el tamaño típico.
     j.beginArray("prolongaciones");
     for (const ProcessSpec& p : s.processes) {
-        constexpr const char* kKind[] = {"cuerno", "espina", "brazo", "seta"};
+        constexpr const char* kKind[] = {"cuerno", "espina", "brazo", "seta", "hendidura"};
+        static_assert(sizeof(kKind) / sizeof(*kKind) == static_cast<std::size_t>(ProcessKind::Notch) + 1);
         j.beginObject();
         j.string("tipo", kKind[static_cast<int>(p.kind)]);
         j.number("direccion_grados", p.at * 180.0 / units::kPi);

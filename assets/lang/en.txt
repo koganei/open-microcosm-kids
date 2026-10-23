@@ -2021,3 +2021,6 @@ Nueva escala	New scale
 Población silvestre	Wild population
 Variación genética de las poblaciones silvestres de la gota (1 = la publicada, ~5 % por gen; 0 = clones). Una gota de un charco no es una línea pura.	Genetic variation of the wild populations of the drop (1 = the published one, ~5 % per gene; 0 = clones). A drop of a puddle is not a pure line.
 Variación genética de lo que se siembra (0 = un clon, una línea pura como las de Gause; 1 = la de una población silvestre).	Genetic variation of what is seeded (0 = a clone, a pure line like Gause's; 1 = that of a wild population).
+
+Hendiduras	Notches
+%d entradas en el contorno celular	%d indentations in the cell outline

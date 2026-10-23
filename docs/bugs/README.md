@@ -13,6 +13,7 @@ here.
 
 ## Open
 
+
 | ID | Type | Severity | Summary |
 |---|---|---|---|
 | [`drop-bacteria-collapse`](drop-bacteria-collapse.md) | model-limitation | major | Bacteria in a drop collapse within a few biological hours; the 30-min test is skipped. |
@@ -23,6 +24,8 @@ here.
 | [`ciliate-ring-crossed-after-division`](ciliate-ring-crossed-after-division.md) | bug | minor | *Paramecium* folds its posterior pole in crowded contacts (the wall cause is fixed). |
 
 ## Fixed
+
+- [Notched-cell inspection and export](inspection-notch-overflow.md): safe notch handling verified by catalog, export and sanitizer regressions.
 
 Fixed issues keep their file with `Status: fixed` and the commit. Issues fixed before this folder
 existed are recorded in [validation](../validation/README.md#model-problems-found-while-validating-mvp-phase).

@@ -83,6 +83,7 @@ TEST_CASE("fisiología: la ficha y la exportación de especies muestran la fuent
     // Exportación: cada especie con datos lleva valor, lo publicado y la fuente.
     const std::string json = speciesJson();
     CHECK(json.find("\"fisiologia\"") != std::string::npos);
+    CHECK(json.find("\"tipo\": \"hendidura\"") != std::string::npos);
     for (int i = 0; i < speciesCount(); ++i) {
         const SourcedValue& mu = speciesPhysiology(static_cast<SpeciesId>(i)).growthMax;
         if (mu.present)

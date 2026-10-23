@@ -397,9 +397,16 @@ Inspection inspectCell(const World& w, entt::entity e) {
             constexpr const char* kOne[] = {"cuerno", "espina", "brazo", "seta"};
             constexpr const char* kMany[] = {"cuernos", "espinas", "brazos", "setas"};
             int count[4] = {0, 0, 0, 0};
+            int notches = 0;
             float longest[4] = {0.0f, 0.0f, 0.0f, 0.0f};
             for (const ProcessSpec& p : info.processes) {
+                // Una hendidura es una entrada del contorno, no una prolongación.
+                if (p.kind == ProcessKind::Notch) {
+                    notches += p.count;
+                    continue;
+                }
                 const int k = static_cast<int>(p.kind);
+                if (k < 0 || k >= 4) continue;
                 count[k] += p.count;
                 longest[k] = std::max(longest[k], p.length);
             }
@@ -411,7 +418,10 @@ Inspection inspectCell(const World& w, entt::entity e) {
                     text += ", ";
                 text += fmt("%d %s de hasta %ld um", count[k], L(count[k] == 1 ? kOne[k] : kMany[k]), std::lround(longest[k]));
             }
-            add(s, "Prolongaciones", text + L(" (rigidas, de la pared)"));
+            if (!text.empty())
+                add(s, "Prolongaciones", text + L(" (rigidas, de la pared)"));
+            if (notches > 0)
+                add(s, "Hendiduras", fmt("%d entradas en el contorno celular", notches));
         }
         const char* repro = info.budding                ? "gemacion: una yema crece y se separa"
                             : info.colonyDaughters > 0  ? "libera colonias hijas"

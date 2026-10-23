@@ -367,3 +367,18 @@ TEST_CASE("fichas: minerales, granos y cianobacterias explican lo que se ve") {
     CHECK(osc.title == "Oscillatoria");
     CHECK(valueOf(osc, "Filamento", "Heterocistos").find("ninguno") != std::string::npos);
 }
+
+TEST_CASE("fichas: las hendiduras no indexan los cuatro tipos de prolongaciones") {
+    World world(emptyWorld());
+    const auto species = findSpecies("paramecium");
+    REQUIRE(species);
+    bool hasNotch = false;
+    for (const auto &p : speciesInfo(*species).processes)
+        hasNotch |= p.kind == ProcessKind::Notch;
+    REQUIRE(hasNotch);
+    const auto e = spawn(world, *species, world.dish().center);
+    const auto card = buildInspection(world, cell(e));
+    REQUIRE(card.valid);
+    CHECK_FALSE(valueOf(card, "Comportamiento", "Hendiduras").empty());
+    CHECK(valueOf(card, "Comportamiento", "Prolongaciones").empty());
+}

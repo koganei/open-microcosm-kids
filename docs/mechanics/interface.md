@@ -95,3 +95,11 @@ raylib into an atlas (`ui/being_icons`).
 ## Code
 
 `src/app/`, `src/ui/`, `src/ui/panels/`.
+
+## Notched cell inspection
+
+The inspector distinguishes indentations (`ProcessKind::Notch`) from the four
+protrusion kinds. Notches have their own count and card line; they never index
+the protrusion arrays. This avoids stack corruption when inspecting Paramecium
+and other notched cells. See [the regression record](../bugs/inspection-notch-overflow.md)
+and the focused inspection test in `tests/test_inspect.cpp`.
