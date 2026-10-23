@@ -11,7 +11,7 @@
 | **Code** | `src/game/inspect.cpp`, `inspectCell`; `src/game/export.cpp`, `writeSpecies` |
 | **Reported** | 23/10/2026 |
 | **Last verified** | 23/10/2026, upstream `72e10a234f39` |
-| **Fixed in** | Pending verification |
+| **Fixed in** | `bbecab3` |
 
 ## Summary
 

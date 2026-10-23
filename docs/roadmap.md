@@ -243,3 +243,8 @@ antibiotic resistance (4), horizontal transfer (5), measuring evolution (6), cla
 4. **H** (bindings) and **G** (analysis), which build on what already exists.
 5. **D**, **E** and **F** (new biology and chemistry), in the order the lessons need.
 6. **I** and **J** when needed.
+
+## Kids fork
+
+A separate native kids interface is being built on the existing simulation and
+renderer. See the [implementation plan](todo/kids-interface.md).

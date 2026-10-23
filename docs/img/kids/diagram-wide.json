@@ -1,0 +1,23 @@
+{
+  "route": 2,
+  "activity": 1,
+  "landing": 0,
+  "notebook": 0,
+  "paused": 1,
+  "diagram": 1,
+  "follow": 1,
+  "photos": 1,
+  "selected": 0,
+  "food_offers": 0,
+  "meals": 0,
+  "chapter": 0,
+  "answer": -1,
+  "salty": 0,
+  "changed": 0,
+  "volume": 1,
+  "elapsed": 1.91667,
+  "frame_ms": 16.6668,
+  "tick_ms": 0.000439,
+  "render_ms": 3.0153,
+  "narration": "Tiny hair-like parts called cilia beat to help this single cell swim and sweep in food."
+}

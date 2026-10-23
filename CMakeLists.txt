@@ -279,6 +279,15 @@ add_executable(microcosm
     src/render/triangle_batch.cpp
     src/gpu/gpu_substep_solver.cpp)
 
+# Interfaz infantil: el mismo motor y render; sin dependencias nuevas.
+add_executable(microcosm_kids src/kids/main.cpp src/kids/session.cpp src/kids/narrator.cpp
+    src/render/renderer.cpp src/render/photo.cpp src/render/minerals.cpp
+    src/render/tissue_renderer.cpp src/render/field_overlay.cpp src/render/cell_renderer.cpp
+    src/render/instanced_particles.cpp src/render/population_layer.cpp
+    src/render/structure_renderer.cpp src/render/triangle_batch.cpp)
+target_link_libraries(microcosm_kids PRIVATE biosim raylib)
+install(TARGETS microcosm_kids RUNTIME DESTINATION .)
+
 # Dear ImGui como biblioteca aparte: sus fuentes no pasan por nuestros warnings.
 add_library(imgui_lib STATIC
     ${imgui_SOURCE_DIR}/imgui.cpp
@@ -423,4 +432,11 @@ if(BIO_BUILD_TESTS)
                                  ENVIRONMENT "OMP_NUM_THREADS=4;OMP_WAIT_POLICY=passive")
         endforeach()
     endforeach()
+endif()
+
+if(BIO_BUILD_TESTS)
+    add_executable(microcosm_kids_tests tests/test_kids.cpp src/kids/session.cpp)
+    target_link_libraries(microcosm_kids_tests PRIVATE biosim doctest::doctest)
+    add_test(NAME kids_sessions COMMAND microcosm_kids_tests)
+    set_tests_properties(kids_sessions PROPERTIES LABELS "kids;rapidos" TIMEOUT 300)
 endif()

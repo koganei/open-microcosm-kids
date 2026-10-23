@@ -772,3 +772,25 @@ changes behaviour without updating its documentation is incomplete.
 - **Checks:** `tools/gen_being_docs.py --check` (every being has an up-to-date document) and
   `tools/check_doc_links.py` (relative links and anchors) run in `tools/ci.sh` and must pass.
 - Images for the documentation go in `docs/img/` ([index](docs/img/README.md)).
+
+## Kids fork architecture
+
+`microcosm_kids` is a separate native raylib application in `src/kids/`. It shares
+`biosim` and the real microscope renderer; the original `microcosm` laboratory
+is preserved. Kids-facing copy is English. Its session controller records every
+intervention through `Run`; it must not invent a second biology implementation.
+Profiles and photos live in `~/.local/share/open-microcosm-kids`, overridable with
+`MICROCOSM_KIDS_DATA` for isolated QA. Keep the original app's profile untouched.
+
+The five experiences share one interface: habitat exploration, detective work,
+organism discovery, a salt/osmosis experiment, and a narrated story. Habitat
+samples are curated preparations, not estimates of natural abundance. Model view
+must be labelled as a diagram. Explain time compression and distinguish measured
+observations from expected results. No scores or fabricated success states.
+
+The original plan skill is not installed on this workstation. Record large kids
+feature plans in `docs/todo/` and link them from the roadmap. The active plan is
+`docs/todo/kids-interface.md`. Use the existing C++ dependencies; no new libraries
+are needed for the kids interface. On Linux, read-aloud uses the installed Speech Dispatcher service over a
+local SSIP socket (`src/kids/narrator.*`). Keep a persistent client connection
+so Stop cancels only this app’s messages, never all desktop speech. No cloud API.

@@ -4,6 +4,7 @@ Screenshots and videos used by the project [`README.md`](../../README.md) and th
 
 | File | Shown in | Content |
 |---|---|---|
+| `kids/*.png` and `.json` | [Kids review](../design/kids-review.md) | Native captures of all five kids journeys, notebook, photo viewer and a wider diagram view, with UI-state sidecars. |
 | `demo-small.mp4` | README (top) | The tour of the laboratory, H.264 1280 px without audio. The README embeds it through its GitHub attachment URL (`https://github.com/user-attachments/assets/d68a8eea-…`): GitHub only plays videos uploaded as attachments. |
 | `pond.jpg` | README | A drop with *Stentor*, ciliates, algae, diatoms and amoebae (model view). |
 | `red-onion.jpg` | README | Red onion epidermis (model view). |

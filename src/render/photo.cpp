@@ -47,12 +47,21 @@ bool savePhoto(Renderer& renderer, const World& world, const Camera2D& view, Ove
     if (const std::size_t mu = label.find("µ"); mu != std::string::npos)
         label.replace(mu, std::string("µ").size(), "u");
     const std::string stamp = "t = " + number(std::round(hours * 100.0) / 100.0) + " h bio   seed " + std::to_string(info.seed);
-    const int x = 20, y = height - 34, barW = std::max(barPx, MeasureText(label.c_str(), 18));
-    const int stampW = MeasureText(stamp.c_str(), 16);
-    DrawRectangle(x - 8, y - 22, barW + stampW + 40, 44, Fade(BLACK, 0.55f));
+    const bool customFont = info.labelFont.texture.id != 0;
+    const int labelW = customFont
+                           ? static_cast<int>(MeasureTextEx(info.labelFont, label.c_str(), 18, 0).x)
+                           : MeasureText(label.c_str(), 18);
+    const int x = 20, y = height - 34, barW = std::max(barPx, labelW);
+    const int stampW = info.showRunStamp ? MeasureText(stamp.c_str(), 16) : 0;
+    DrawRectangle(x - 8, y - 22, barW + (info.showRunStamp ? stampW + 40 : 16), 44, Fade(BLACK, 0.55f));
     DrawRectangle(x, y + 8, barPx, 6, WHITE);
-    DrawText(label.c_str(), x, y - 14, 18, WHITE);
-    DrawText(stamp.c_str(), x + barW + 24, y - 2, 16, WHITE);
+    if (customFont)
+        DrawTextEx(info.labelFont, label.c_str(),
+                   {static_cast<float>(x), static_cast<float>(y - 14)}, 18, 0, WHITE);
+    else
+        DrawText(label.c_str(), x, y - 14, 18, WHITE);
+    if (info.showRunStamp)
+        DrawText(stamp.c_str(), x + barW + 24, y - 2, 16, WHITE);
     EndTextureMode();
     Image img = LoadImageFromTexture(target.texture);
     ImageFlipVertical(&img); // las render textures de OpenGL están invertidas en Y

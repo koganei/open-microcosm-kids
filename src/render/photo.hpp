@@ -20,6 +20,8 @@ struct PhotoInfo {
     std::string stain;      // id de la tinción ("" ninguna)
     std::string provenance; // versión y commit
     std::string lessonOrScene;
+    Font labelFont{};      // opcional; el llamador conserva la textura durante savePhoto
+    bool showRunStamp = true; // el JSON conserva siempre tiempo y seed
 };
 
 // Dibuja el campo de `camera` (su centro y su zoom) en una imagen de `width`×`height` y la guarda en

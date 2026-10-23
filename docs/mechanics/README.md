@@ -80,3 +80,7 @@ policy in `AGENTS.md`). A new mechanism gets a new file and a line in this index
 |---|---|
 | [Rendering and optics](rendering-and-optics.md) | Bright field, microscope post-process, semantic zoom, body plans, photo and time-lapse. |
 | [Interface](interface.md) | `App`, dockable panels, tools, commands, widgets, languages, accessibility, options. |
+
+## Kids application
+
+- [Kids interface](kids-interface.md): five learning experiences sharing the simulation and renderer.
